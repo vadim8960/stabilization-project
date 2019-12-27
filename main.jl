@@ -20,7 +20,7 @@ using GeometryTypes
 # pror = ODEProblem(func, u0, tspan)
 # sol = solve(pror, Tsit5(), reltol = 1e-3)
 
-tmax = 5.0
+tmax = 6.0
 dt = 0.05
 
 sol = Integrate.get_solution(0.0, tmax, dt)
@@ -47,7 +47,7 @@ function convert_angle_to_node(t, v)
     if (ind >= size(angle)[1])
         return (sin(angle[size(angle)[1]]), cos(angle[size(angle)[1]]))
     else
-        return (sin(angle[ind]), cos(angle[ind]))
+        return (sin(angle[ind]) + position[ind], cos(angle[ind]))
     end
 end
 
@@ -62,7 +62,7 @@ end
 
 scene = Scene(resolution = (500, 500))
 
-x = collect(-1:1:7)
+x = collect(-2:1:2)
 y = Array{Float64, 1}(undef, size(x)[1])
 for i = 1 : size(y)[1]
     y[i] = 0.0
