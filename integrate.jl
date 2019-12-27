@@ -25,14 +25,14 @@ def func(u, t):
 
     return du
 
-def get_solution():
-    anw = int.odeint(func, u0, np.arange(0, 10, 0.05))
+def get_solution(t0, tmax, dt):
+    anw = int.odeint(func, u0, np.arange(t0, tmax, dt))
     return anw.reshape(len(anw) * len(anw[1]))
 
 """
 
-function get_solution()
-    py"get_solution"()
+function get_solution(t0, tmax, dt)
+    py"get_solution"(t0, tmax, dt)
 end
 
 end
