@@ -27,18 +27,18 @@ dt = 0.05
 
 sol = Integrate.get_solution(0.0, tmax, dt)
 
-angle = Array{Float64, 1}(undef, div(size(sol)[1], 4))
-position = Array{Float64, 1}(undef, div(size(sol)[1], 4))
+angle = Array{Float64, 1}(undef, size(sol)[1])
+position = Array{Float64, 1}(undef, size(sol)[1])
 angle_it = 1
 pos_it = 1
-for i = 1 : size(sol)[1]
+for i in eachindex(sol)
     global angle_it
     global pos_it
-    if ((i - 1) % 4 == 0)
+    if (div(i, size(angle)[1]) == 0)
         angle[angle_it] = sol[i]
         angle_it = angle_it + 1
     end
-    if ((i - 1) % 4 == 2)
+    if (div(i, size(angle)[1]) == 2)
         position[pos_it] = sol[i]
         pos_it = pos_it + 1
     end
@@ -64,7 +64,7 @@ end
 
 scene = Scene(resolution = (500, 500))
 
-x = collect(-2:1:10)
+x = collect(-2:1:2)
 y = Array{Float64, 1}(undef, size(x)[1])
 for i = 1 : size(y)[1]
     y[i] = 0.0
