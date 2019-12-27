@@ -7,6 +7,8 @@ using Makie
 using AbstractPlotting
 using GeometryTypes
 
+print(">>> ")
+
 # plotlyjs()
 
 # function func(du, u, p, t)
@@ -20,7 +22,7 @@ using GeometryTypes
 # pror = ODEProblem(func, u0, tspan)
 # sol = solve(pror, Tsit5(), reltol = 1e-3)
 
-tmax = 6.0
+tmax = 5.0
 dt = 0.05
 
 sol = Integrate.get_solution(0.0, tmax, dt)
@@ -62,7 +64,7 @@ end
 
 scene = Scene(resolution = (500, 500))
 
-x = collect(-2:1:2)
+x = collect(-2:1:10)
 y = Array{Float64, 1}(undef, size(x)[1])
 for i = 1 : size(y)[1]
     y[i] = 0.0
@@ -80,6 +82,8 @@ linesegments!(scene, points)
 lines!(y, x, color = :white)
 lines!(x, y, color = :white)
 
-record(scene, "output.mp4", range(0, stop = tmax - dt, length = Int(div(tmax, dt)))) do i
-    push!(time_node, i)
+while (true)
+    record(scene, "output.mp4", range(0, stop = tmax - dt, length = Int(div(tmax, dt)))) do i
+        push!(time_node, i)
+    end
 end
