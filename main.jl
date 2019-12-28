@@ -22,7 +22,7 @@ print(">>> ")
 # pror = ODEProblem(func, u0, tspan)
 # sol = solve(pror, Tsit5(), reltol = 1e-3)
 
-tmax = 5.0
+tmax = 10.0
 dt = 0.05
 
 sol = Integrate.get_solution(0.0, tmax, dt)
@@ -64,7 +64,10 @@ end
 
 scene = Scene(resolution = (500, 500))
 
-x = collect(-2:1:2)
+plot_scene = plot(range(0, stop = tmax - dt, step = dt), angle)
+plot!(plot_scene, range(0, stop = tmax - dt, step = dt), position)
+
+x = collect(-3:1:3)
 y = Array{Float64, 1}(undef, size(x)[1])
 for i = 1 : size(y)[1]
     y[i] = 0.0
@@ -79,11 +82,11 @@ points = lift(p1[1], p2[1]) do pos1, pos2
 end
 linesegments!(scene, points)
 
-lines!(y, x, color = :white)
-lines!(x, y, color = :white)
+lines!(scene, y, x, color = :white)
+lines!(scene, x, y, color = :white)
 
 while (true)
-    record(scene, "output.mp4", range(0, stop = tmax - dt, length = Int(div(tmax, dt)))) do i
+    record(vbox(scene, plot_scene), "output.mp4", range(0, stop = tmax - dt, length = Int(div(tmax, dt)))) do i
         push!(time_node, i)
     end
 end
