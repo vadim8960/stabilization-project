@@ -33,16 +33,20 @@ function func_free_vibrations(u, t)
     b = vars.m / (vars.m + vars.M)
     du[1] = u[2]
     du[2] = (g * sin(th) + b * vars.L * du[1]^2 * sin(th) * cos(th)) /
-            (vars.L * (1 + b * cos(th)^2)) - du[1]
+            (vars.L * (1 + b * cos(th)^2))
     du[3] = u[4]
     du[4] = b * (vars.L * du[1]^2 * sin(th) - g * sin(th) * cos(th)) /
-            (1 + b * cos(th)^2) - du[3]
+            (1 + b * cos(th)^2)
 
     return du
 end
 
-function get_solution(t0, tmax, dt)
+function get_solution_stab(t0, tmax, dt)
     return integrate.odeint(func_stabilization, vars.u0, range(t0, stop = tmax - dt, step = dt))
+end
+
+function get_solution_free(t0, tmax, dt)
+    return integrate.odeint(func_free_vibrations, vars.u0, range(t0, stop = tmax - dt, step = dt))
 end
 
 end

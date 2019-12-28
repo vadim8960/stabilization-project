@@ -22,56 +22,41 @@ print(">>> ")
 # pror = ODEProblem(func, u0, tspan)
 # sol = solve(pror, Tsit5(), reltol = 1e-3)
 
+x_axis_min = -3
+x_axis_max = 3
+
 tmax = 10.0
 dt = 0.05
 
-sol = Integrate.get_solution(0.0, tmax, dt)
+sol = vec(Integrate.get_solution_stab(0.0, tmax, dt))
 
-angle = Array{Float64, 1}(undef, size(sol)[1])
-position = Array{Float64, 1}(undef, size(sol)[1])
-angle_it = 1
-pos_it = 1
-for i in eachindex(sol)
-    global angle_it
-    global pos_it
-    if (div(i, size(angle)[1]) == 0)
-        angle[angle_it] = sol[i]
-        angle_it = angle_it + 1
-    end
-    if (div(i, size(angle)[1]) == 2)
-        position[pos_it] = sol[i]
-        pos_it = pos_it + 1
-    end
-end
+size_meas = Int(div(size(sol)[1], 4))
+
+angle = sol[filter(x->(Int(div(x - 1, size_meas)) == 0), range(1, stop = size(sol)[1], step = 1))]
+position = sol[filter(x->(Int(div(x - 1, size_meas)) == 2), range(1, stop = size(sol)[1], step = 1))]
+
+println(angle)
 
 function convert_angle_to_node(t, v)
     ind = Int(div(t, dt)) + 1
-    if (ind >= size(angle)[1])
-        return (sin(angle[size(angle)[1]]), cos(angle[size(angle)[1]]))
-    else
-        return (sin(angle[ind]) + position[ind], cos(angle[ind]))
-    end
+    return (sin(angle[ind]) + position[ind], cos(angle[ind]))
 end
 
 function convert_pos_to_node(t, v)
     ind = Int(div(t, dt)) + 1
-    if (ind >= size(position)[1])
-        return (position[size(position)[1]], 0.0)
-    else
-        return (position[ind], 0.0)
-    end
+    return (position[ind], 0.0)
 end
+
+println(size(angle))
+println(size(position))
 
 scene = Scene(resolution = (500, 500))
 
-plot_scene = plot(range(0, stop = tmax - dt, step = dt), angle)
-plot!(plot_scene, range(0, stop = tmax - dt, step = dt), position)
+plot_scene = plot(range(0, stop = tmax - dt, step = dt), angle, color = :red)
+plot!(plot_scene, range(0, stop = tmax - dt, step = dt), position, color = :blue)
 
-x = collect(-3:1:3)
-y = Array{Float64, 1}(undef, size(x)[1])
-for i = 1 : size(y)[1]
-    y[i] = 0.0
-end
+x = collect(x_axis_min:1:x_axis_max)
+y = zeros(size(x)[1])
 
 time_node = Node(0.0)
 p1 = scatter!(scene, lift(t->convert_angle_to_node.(t, range(0, stop = 1, length = 2)), time_node))[end]
