@@ -1,27 +1,10 @@
-# module MyModule
-
 using DifferentialEquations
-# using Plots
 include("integrate.jl")
 using Makie
-using AbstractPlotting
-
-# plotlyjs()
-
-# function func(du, u, p, t)
-#     th = u[1]
-#     du[1] = u[2]
-#     du[2] = (g * sin(th) + b * L * du[2]^2 * sin(th) * cos(th)) / (L * (1 + b * cos(th)^2))
-#     du[3] = u[4]
-#     du[4] = b * (L * du[2]^2 * sin(th) - g * sin(th) * cos(th)) / (1 + b * cos(th)^2)
-# end
-#
-# pror = ODEProblem(func, u0, tspan)
-# sol = solve(pror, Tsit5(), reltol = 1e-3)
-
 
 #                   Variable note                   u0             L    m    M
 start_variables = Integrate.VariablesODE([pi/4.0, 0.0, 0.0, 0.0], 1.0, 1.0, 1.0)
+
 Integrate.set_variables(start_variables)
 
 x_axis_min = -(start_variables.L + 5)
