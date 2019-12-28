@@ -14,6 +14,11 @@ end
 const g = 9.81
 vars = VariablesODE([pi/4.0, 0.0, 0.0, 0.0], 1.0, 1.0, 1.0)
 
+function set_variables(var::VariablesODE)
+    global vars
+    vars = var
+end
+
 function func_stabilization(u, t)
     du = zeros(size(u)[1])
     th = u[1]
@@ -33,10 +38,10 @@ function func_free_vibrations(u, t)
     b = vars.m / (vars.m + vars.M)
     du[1] = u[2]
     du[2] = (g * sin(th) + b * vars.L * du[1]^2 * sin(th) * cos(th)) /
-            (vars.L * (1 + b * cos(th)^2))
+            (vars.L * (1 + b * cos(th)^2)) - du[1]
     du[3] = u[4]
     du[4] = b * (vars.L * du[1]^2 * sin(th) - g * sin(th) * cos(th)) /
-            (1 + b * cos(th)^2)
+            (1 + b * cos(th)^2) - du[3]
 
     return du
 end
